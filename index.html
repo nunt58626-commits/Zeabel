@@ -4,21 +4,21 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://getbootstrap.com/docs/5.3/assets/css/docs.css" rel="stylesheet">
     <title>บันทึกการเคลื่อนย้ายสินค้าภายในคลัง</title>
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
   </head>
-  <body style="background-color: rgba(185, 195, 255, 0.641);">
+  <body style="background-color: rgba(185, 195, 255, 0.64);">
+    <!-- Navbar -->
     <nav class="navbar navbar-dark fixed-top" style="background-color: #292755;">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">บันทึกการเคลื่อนย้ายสินค้าภายในคลัง ST1</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-          <div class="offcanvas-header" style="background-color: rgba(185, 195, 255, 0.641);">
+          <div class="offcanvas-header" style="background-color: rgba(185, 195, 255, 0.64);">
             <h5 class="offcanvas-title" id="offcanvasNavbarLabel">ข้อมูลการเคลื่อนย้ายสินค้า</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
           </div>
           <div class="offcanvas-body" style="background-color: #292755;">
             <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
@@ -29,127 +29,117 @@
                 <a class="nav-link" href="save.html">ประวัติการเคลื่อนย้ายสินค้า</a>
               </li>
             </ul>
-          </div> 
+          </div>
         </div>
       </div>
     </nav>
-    <br><br><br>
 
-    <div class="container">
-      <!-- แก้ไข: เพิ่ม ID ให้ฟอร์ม และเอา action/method ออก เพราะเราจะใช้ JS แทน -->
+    <div class="container mt-5 pt-5">
       <form id="movementForm">
         <div class="mb-3">
           <label for="productCode" class="form-label">รหัสสินค้า</label>
-          <!-- แก้ไข: เพิ่ม ID และ name -->
           <input type="text" class="form-control" id="productCode" name="productCode" placeholder="รหัสสินค้า" required>
         </div>
         <div class="mb-3">
           <label for="quantity" class="form-label">จำนวนลัง</label>
-           <!-- แก้ไข: เพิ่ม ID และ name -->
           <input type="number" class="form-control" id="quantity" name="quantity" placeholder="จำนวนลัง" required min="1">
         </div>
         <div class="mb-3">
           <label for="mfgDate" class="form-label">วัน เดือน ปี ผลิต</label>
-           <!-- แก้ไข: เพิ่ม ID และ name -->
           <input type="date" class="form-control" id="mfgDate" name="mfgDate" required>
         </div>
         <div class="mb-3">
           <label for="expDate" class="form-label">วัน เดือน ปี หมดอายุ</label>
-           <!-- แก้ไข: เพิ่ม ID และ name -->
           <input type="date" class="form-control" id="expDate" name="expDate" required>
         </div>
-         <div class="col-auto">
-            <label for="locationFrom" class="form-label">จากตำแหน่ง</label>
-            <!-- แก้ไข: เพิ่ม ID และ name -->
-            <select class="form-select" id="locationFrom" name="locationFrom" required>
-              <option selected disabled value="">เลือกตำแหน่ง</option>
-              <option value="นอกคลัง">นอกคลัง</option>
-              <!-- ตัวเลือกอื่นๆ ตามที่คุณมีอยู่... -->
-              <option value="แถวที่ 1 ซ้าย">แถวที่ 1 ซ้าย</option>
-              <option value="แถวที่ 1 ขวา">แถวที่ 1 ขวา</option>
-               <!-- เพิ่ม option ที่เหลือตรงนี้ -->
-              <option value="แถวที่ 2 ซ้าย">แถวที่ 2 ซ้าย</option>
-              <option value="แถวที่ 2 ขวา">แถวที่ 2 ขวา</option>
-              <option value="แถวที่ 3 ซ้าย">แถวที่ 3 ซ้าย</option>
-              <option value="แถวที่ 3 ขวา">แถวที่ 3 ขวา</option>
-              <option value="แถวที่ 4 ซ้าย">แถวที่ 4 ซ้าย</option>
-              <option value="แถวที่ 4 ขวา">แถวที่ 4 ขวา</option>
-              <option value="แถวที่ 5 ซ้าย">แถวที่ 5 ซ้าย</option>
-              <option value="แถวที่ 5 ขวา">แถวที่ 5 ขวา</option>
-              <option value="แถวที่ 6 ซ้าย">แถวที่ 6 ซ้าย</option>
-              <option value="แถวที่ 6 ขวา">แถวที่ 6 ขวา</option>
-              <option value="แถวที่ 7 ซ้าย">แถวที่ 7 ซ้าย</option>
-              <option value="แถวที่ 7 ขวา">แถวที่ 7 ขวา</option>
-              <option value="แถวที่ 8 ซ้าย">แถวที่ 8 ซ้าย</option>
-              <option value="แถวที่ 8 ขวา">แถวที่ 8 ขวา</option>
-            </select>
-          </div>
-          <br>
-           <div class="col-auto">
-            <label for="locationTo" class="form-label">ไปตำแหน่ง</label>
-             <!-- แก้ไข: เพิ่ม ID และ name -->
-            <select class="form-select" id="locationTo" name="locationTo" required>
-              <option selected disabled value="">เลือกตำแหน่ง</option>
-              <option value="นอกคลัง">นอกคลัง</option>
-               <!-- ตัวเลือกอื่นๆ ตามที่คุณมีอยู่... -->
-              <option value="แถวที่ 1 ซ้าย">แถวที่ 1 ซ้าย</option>
-              <option value="แถวที่ 1 ขวา">แถวที่ 1 ขวา</option>
-               <!-- เพิ่ม option ที่เหลือตรงนี้ -->
-              <option value="แถวที่ 2 ซ้าย">แถวที่ 2 ซ้าย</option>
-              <option value="แถวที่ 2 ขวา">แถวที่ 2 ขวา</option>
-              <option value="แถวที่ 3 ซ้าย">แถวที่ 3 ซ้าย</option>
-              <option value="แถวที่ 3 ขวา">แถวที่ 3 ขวา</option>
-              <option value="แถวที่ 4 ซ้าย">แถวที่ 4 ซ้าย</option>
-              <option value="แถวที่ 4 ขวา">แถวที่ 4 ขวา</option>
-              <option value="แถวที่ 5 ซ้าย">แถวที่ 5 ซ้าย</option>
-              <option value="แถวที่ 5 ขวา">แถวที่ 5 ขวา</option>
-              <option value="แถวที่ 6 ซ้าย">แถวที่ 6 ซ้าย</option>
-              <option value="แถวที่ 6 ขวา">แถวที่ 6 ขวา</option>
-              <option value="แถวที่ 7 ซ้าย">แถวที่ 7 ซ้าย</option>
-              <option value="แถวที่ 7 ขวา">แถวที่ 7 ขวา</option>
-              <option value="แถวที่ 8 ซ้าย">แถวที่ 8 ซ้าย</option>
-              <option value="แถวที่ 8 ขวา">แถวที่ 8 ขวา</option>
-            </select>
-          </div>
-          <br>
-          <center>
-          <!-- ปุ่มนี้จะถูกเรียกใช้ด้วย JavaScript -->
+        <div class="mb-3">
+          <label for="locationFrom" class="form-label">จากตำแหน่ง</label>
+          <select class="form-select" id="locationFrom" name="locationFrom" required>
+            <option selected disabled value="">เลือกตำแหน่ง</option>
+            <option value="นอกคลัง">นอกคลัง</option>
+            <option value="แถวที่ 1 ซ้าย">แถวที่ 1 ซ้าย</option>
+            <option value="แถวที่ 1 ขวา">แถวที่ 1 ขวา</option>
+            <option value="แถวที่ 2 ซ้าย">แถวที่ 2 ซ้าย</option>
+            <option value="แถวที่ 2 ขวา">แถวที่ 2 ขวา</option>
+            <option value="แถวที่ 3 ซ้าย">แถวที่ 3 ซ้าย</option>
+            <option value="แถวที่ 3 ขวา">แถวที่ 3 ขวา</option>
+            <option value="แถวที่ 4 ซ้าย">แถวที่ 4 ซ้าย</option>
+            <option value="แถวที่ 4 ขวา">แถวที่ 4 ขวา</option>
+            <option value="แถวที่ 5 ซ้าย">แถวที่ 5 ซ้าย</option>
+            <option value="แถวที่ 5 ขวา">แถวที่ 5 ขวา</option>
+            <option value="แถวที่ 6 ซ้าย">แถวที่ 6 ซ้าย</option>
+            <option value="แถวที่ 6 ขวา">แถวที่ 6 ขวา</option>
+            <option value="แถวที่ 7 ซ้าย">แถวที่ 7 ซ้าย</option>
+            <option value="แถวที่ 7 ขวา">แถวที่ 7 ขวา</option>
+            <option value="แถวที่ 8 ซ้าย">แถวที่ 8 ซ้าย</option>
+            <option value="แถวที่ 8 ขวา">แถวที่ 8 ขวา</option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="locationTo" class="form-label">ไปตำแหน่ง</label>
+          <select class="form-select" id="locationTo" name="locationTo" required>
+            <option selected disabled value="">เลือกตำแหน่ง</option>
+            <option value="นอกคลัง">นอกคลัง</option>
+            <option value="แถวที่ 1 ซ้าย">แถวที่ 1 ซ้าย</option>
+            <option value="แถวที่ 1 ขวา">แถวที่ 1 ขวา</option>
+            <option value="แถวที่ 2 ซ้าย">แถวที่ 2 ซ้าย</option>
+            <option value="แถวที่ 2 ขวา">แถวที่ 2 ขวา</option>
+            <option value="แถวที่ 3 ซ้าย">แถวที่ 3 ซ้าย</option>
+            <option value="แถวที่ 3 ขวา">แถวที่ 3 ขวา</option>
+            <option value="แถวที่ 4 ซ้าย">แถวที่ 4 ซ้าย</option>
+            <option value="แถวที่ 4 ขวา">แถวที่ 4 ขวา</option>
+            <option value="แถวที่ 5 ซ้าย">แถวที่ 5 ซ้าย</option>
+            <option value="แถวที่ 5 ขวา">แถวที่ 5 ขวา</option>
+            <option value="แถวที่ 6 ซ้าย">แถวที่ 6 ซ้าย</option>
+            <option value="แถวที่ 6 ขวา">แถวที่ 6 ขวา</option>
+            <option value="แถวที่ 7 ซ้าย">แถวที่ 7 ซ้าย</option>
+            <option value="แถวที่ 7 ขวา">แถวที่ 7 ขวา</option>
+            <option value="แถวที่ 8 ซ้าย">แถวที่ 8 ซ้าย</option>
+            <option value="แถวที่ 8 ขวา">แถวที่ 8 ขวา</option>
+          </select>
+        </div>
+
+        <br>
+        <div class="d-grid gap-2 col-6 mx-auto">
           <button type="submit" class="btn btn-primary">บันทึก</button>
-        </center>
-      </form> <!-- ปิด form ตรงนี้ -->
+          <br>
+        </div>
+      </form>
     </div>
-    
-    <!-- เพิ่ม JavaScript Code ตรงนี้ -->
+
     <script>
-        document.getElementById('movementForm').addEventListener('submit', function(event) {
-            event.preventDefault(); // หยุดการทำงานปกติของ Form (ไม่ให้เปลี่ยนหน้า)
+      document.getElementById('movementForm').addEventListener('submit', function(event) {
+        event.preventDefault();
 
-            // 1. ดึงข้อมูลจาก Form
-            const formData = {
-                productCode: document.getElementById('productCode').value,
-                quantity: document.getElementById('quantity').value,
-                mfgDate: document.getElementById('mfgDate').value,
-                expDate: document.getElementById('expDate').value,
-                locationFrom: document.getElementById('locationFrom').value,
-                locationTo: document.getElementById('locationTo').value,
-                timestamp: new Date().toISOString() // เพิ่มวันเวลาที่บันทึก
-            };
+        const formData = {
+          productCode: document.getElementById('productCode').value.trim(),
+          quantity: parseInt(document.getElementById('quantity').value),
+          mfgDate: document.getElementById('mfgDate').value,
+          expDate: document.getElementById('expDate').value,
+          locationFrom: document.getElementById('locationFrom').value,
+          locationTo: document.getElementById('locationTo').value,
+          timestamp: new Date().toISOString()
+        };
 
-            // 2. ดึงข้อมูลเก่าจาก LocalStorage (ถ้ามี)
-            // 'stockMovements' คือชื่อ key ที่เราใช้เก็บข้อมูล
-            const existingData = JSON.parse(localStorage.getItem('stockMovements')) || [];
+        // Validation: วันที่หมดอายุต้องหลังวันผลิต
+        if (formData.expDate <= formData.mfgDate) {
+          alert('วันหมดอายุต้องมากกว่าวันผลิต');
+          return;
+        }
 
-            // 3. เพิ่มข้อมูลใหม่เข้าไป
-            existingData.push(formData);
+        // Validation: ตำแหน่งจากและไปต้องไม่เหมือนกัน
+        if (formData.locationFrom === formData.locationTo) {
+          alert('ตำแหน่งจากและไปต้องไม่เหมือนกัน');
+          return;
+        }
 
-            // 4. บันทึกข้อมูลชุดใหม่กลับเข้าไปใน LocalStorage
-            localStorage.setItem('stockMovements', JSON.stringify(existingData));
+        const existingData = JSON.parse(localStorage.getItem('stockMovements')) || [];
+        existingData.push(formData);
+        localStorage.setItem('stockMovements', JSON.stringify(existingData));
 
-            // 5. แจ้งเตือนผู้ใช้และรีเซ็ตฟอร์ม
-            alert('บันทึกข้อมูลเรียบร้อยแล้ว!');
-            this.reset(); // เคลียร์ฟอร์ม
-        });
+        alert('บันทึกข้อมูลเรียบร้อยแล้ว!');
+        this.reset();
+      });
     </script>
-
   </body>
 </html>
