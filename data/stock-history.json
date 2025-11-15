@@ -1,0 +1,11 @@
+[
+  {
+    "productCode": "A123",
+    "quantity": 10,
+    "locationFrom": "ชั้น 1",
+    "locationTo": "ชั้น 3",
+    "mfgDate": "2025-01-10",
+    "expDate": "2025-05-10",
+    "timestamp": "2025-11-15T12:30:23.000Z"
+  }
+]
