@@ -7,17 +7,17 @@
     <title>ประวัติการเคลื่อนย้ายสินค้า</title>
     <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
   </head>
-  <body style="background-color: rgba(185, 195, 255, 0.641);">
+  <body style="background-color: rgba(185, 195, 255, 0.64);">
     <nav class="navbar navbar-dark fixed-top" style="background-color: #292755;">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">ประวัติการเคลื่อนย้ายสินค้า ST1</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" aria-label="Toggle navigation">
+        <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-          <div class="offcanvas-header" style="background-color: rgba(185, 195, 255, 0.641);">
+          <div class="offcanvas-header" style="background-color: rgba(185, 195, 255, 0.64);">
             <h5 class="offcanvas-title" id="offcanvasNavbarLabel">ข้อมูลการเคลื่อนย้ายสินค้า</h5>
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
           </div>
           <div class="offcanvas-body" style="background-color: #292755;">
             <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
@@ -25,39 +25,56 @@
                 <a class="nav-link" href="index.html">บันทึกการเคลื่อนย้ายสินค้า</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="Save.html">ประวัติการเคลื่อนย้ายสินค้า</a>
+                <a class="nav-link active" aria-current="page" href="save.html">ประวัติการเคลื่อนย้ายสินค้า</a>
               </li>
             </ul>
           </div> 
         </div>
       </div>
     </nav>
-    <br><br><br>
 
-    <div class="container mt-4">
-      <button class="btn btn-danger mb-3" onclick="clearHistory()">ล้างประวัติทั้งหมด</button>
+    <div class="container mt-5 pt-4">
+      <div class="d-flex justify-content-end mb-3">
+        <button onclick="exportExcel()" class="btn btn-warning me-2">ส่งออก Excel</button>
+        <button class="btn btn-danger" onclick="clearHistory()">ล้างประวัติทั้งหมด</button>
+      </div>
+
       <div id="historyTableContainer">
-        <!-- ตารางประวัติจะถูกสร้างด้วย JavaScript ที่นี่ -->
+        <!-- ตารางประวัติจะถูกสร้างด้วย JavaScript -->
       </div>
     </div>
-
+    
     <script>
-        // ฟังก์ชันสำหรับโหลดและแสดงข้อมูลประวัติ
+        // โหลดและแสดงข้อมูลประวัติ
         function loadHistory() {
-            const historyContainer = document.getElementById('historyTableContainer');
-            const storedData = JSON.parse(localStorage.getItem('stockMovements')) || [];
+            const container = document.getElementById('historyTableContainer');
+            const data = JSON.parse(localStorage.getItem('stockMovements')) || [];
 
-            if (storedData.length === 0) {
-                historyContainer.innerHTML = '<p>ยังไม่มีประวัติการเคลื่อนย้ายสินค้า</p>';
+            if (data.length === 0) {
+                container.innerHTML = '<p class="text-center mt-3">ยังไม่มีประวัติการเคลื่อนย้ายสินค้า</p>';
                 return;
             }
 
-            // สร้างตาราง Bootstrap
-            let tableHTML = '<table class="table table-striped table-bordered"><thead><tr><th>รหัสสินค้า</th><th>จำนวนลัง</th><th>จากตำแหน่ง</th><th>ไปตำแหน่ง</th><th>วันผลิต</th><th>วันหมดอายุ</th><th>เวลาบันทึก</th></tr></thead><tbody>';
+            let tableHTML = `
+              <div class="table-responsive">
+              <table class="table table-striped table-bordered">
+                <thead class="table-dark">
+                  <tr>
+                    <th>รหัสสินค้า</th>
+                    <th>จำนวนลัง</th>
+                    <th>จากตำแหน่ง</th>
+                    <th>ไปตำแหน่ง</th>
+                    <th>วันผลิต</th>
+                    <th>วันหมดอายุ</th>
+                    <th>เวลาบันทึก</th>
+                  </tr>
+                </thead>
+                <tbody>
+            `;
 
-            // วนลูปข้อมูลที่เก็บไว้
-            storedData.forEach(item => {
-                tableHTML += `<tr>
+            data.forEach(item => {
+                tableHTML += `
+                  <tr>
                     <td>${item.productCode}</td>
                     <td>${item.quantity}</td>
                     <td>${item.locationFrom}</td>
@@ -65,25 +82,57 @@
                     <td>${item.mfgDate}</td>
                     <td>${item.expDate}</td>
                     <td>${new Date(item.timestamp).toLocaleString()}</td>
-                </tr>`;
+                  </tr>
+                `;
             });
 
-            tableHTML += '</tbody></table>';
-            historyContainer.innerHTML = tableHTML;
+            tableHTML += '</tbody></table></div>';
+            container.innerHTML = tableHTML;
         }
 
-        // ฟังก์ชันล้างประวัติ
+        // ล้างประวัติ
         function clearHistory() {
             if (confirm('คุณแน่ใจหรือไม่ที่จะล้างประวัติทั้งหมด?')) {
                 localStorage.removeItem('stockMovements');
-                loadHistory(); // โหลดตารางใหม่หลังจากลบ
+                loadHistory();
                 alert('ล้างประวัติเรียบร้อยแล้ว');
             }
         }
 
-        // เรียกใช้ฟังก์ชันเมื่อหน้าเว็บโหลดเสร็จ
+        // ส่งออกเป็น Excel (CSV)
+        function exportExcel() {
+            const data = JSON.parse(localStorage.getItem('stockMovements')) || [];
+            if (data.length === 0) {
+                alert('ไม่มีข้อมูลให้ส่งออก');
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "รหัสสินค้า,จำนวนลัง,จากตำแหน่ง,ไปตำแหน่ง,วันผลิต,วันหมดอายุ,เวลาบันทึก\n";
+
+            data.forEach(item => {
+                const row = [
+                    item.productCode,
+                    item.quantity,
+                    item.locationFrom,
+                    item.locationTo,
+                    item.mfgDate,
+                    item.expDate,
+                    new Date(item.timestamp).toLocaleString()
+                ].join(",");
+                csvContent += row + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "stock_history.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
         document.addEventListener('DOMContentLoaded', loadHistory);
     </script>
-
   </body>
 </html>
