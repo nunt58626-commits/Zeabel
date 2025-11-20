@@ -1,64 +1,162 @@
-async function loadHistoryFromGitHub() {
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>ประวัติการเคลื่อนย้ายสินค้า</title>
+  <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</head>
+<body style="background-color: rgba(185, 195, 255, 0.64);">
+  <nav class="navbar navbar-dark fixed-top" style="background-color: #292755;">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="#">ประวัติการเคลื่อนย้ายสินค้า ST1</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+        <div class="offcanvas-header" style="background-color: rgba(185, 195, 255, 0.64);">
+          <h5 class="offcanvas-title" id="offcanvasNavbarLabel">ข้อมูลการเคลื่อนย้ายสินค้า</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body" style="background-color: #292755;">
+          <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">บันทึกการเคลื่อนย้ายสินค้า</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="save.html">ประวัติการเคลื่อนย้ายสินค้า</a>
+            </li>
+          </ul>
+        </div> 
+      </div>
+    </div>
+  </nav>
+
+  <div class="container mt-5 pt-4">
+    <div class="d-flex justify-content-end mb-3">
+      <button onclick="exportExcel()" class="btn btn-warning me-2">ส่งออก Excel</button>
+      <button class="btn btn-danger" onclick="clearHistory()">ล้างประวัติทั้งหมด</button>
+    </div>
+
+    <div id="historyTableContainer">
+      <!-- ตารางประวัติจะถูกสร้างด้วย JavaScript -->
+    </div>
+  </div>
+
+<script>
+const GITHUB_URL = 'https://raw.githubusercontent.com/nunt58626-commits/Zeabel/main/data/stock-history.json';
+let stockData = [];
+
+// โหลดข้อมูลจาก GitHub
+async function loadHistory() {
     const container = document.getElementById('historyTableContainer');
-    const url = 'https://raw.githubusercontent.com/nunt58626-commits/Zeabel/main/data/stock-history.json';
-
     try {
-        const res = await fetch(url);
+        const res = await fetch(GITHUB_URL);
         if (!res.ok) throw new Error('ไม่สามารถโหลดข้อมูลจาก GitHub ได้');
-        const data = await res.json();
+        stockData = await res.json();
 
-        if (data.length === 0) {
+        if (stockData.length === 0) {
             container.innerHTML = '<p class="text-center mt-3">ยังไม่มีประวัติการเคลื่อนย้ายสินค้า</p>';
             return;
         }
 
-        let tableHTML = `
-          <div class="table-responsive">
-          <input type="text" id="searchInput" class="form-control mb-2" placeholder="ค้นหารหัสสินค้า">
-          <table class="table table-striped table-bordered">
-            <thead class="table-dark">
-              <tr>
-                <th>รหัสสินค้า</th>
-                <th>จำนวนลัง</th>
-                <th>จากตำแหน่ง</th>
-                <th>ไปตำแหน่ง</th>
-                <th>วันผลิต</th>
-                <th>วันหมดอายุ</th>
-                <th>เวลาบันทึก</th>
-              </tr>
-            </thead>
-            <tbody id="historyTableBody">
-        `;
-
-        data.forEach(item => {
-            tableHTML += `
-              <tr>
-                <td>${item.productCode}</td>
-                <td>${item.quantity}</td>
-                <td>${item.from}</td>
-                <td>${item.to}</td>
-                <td>${item.mfg}</td>
-                <td>${item.exp}</td>
-                <td>${new Date(item.timestamp).toLocaleString()}</td>
-              </tr>
-            `;
-        });
-
-        tableHTML += '</tbody></table></div>';
-        container.innerHTML = tableHTML;
-
-        // เพิ่มฟังก์ชันค้นหา
-        document.getElementById('searchInput').addEventListener('input', function() {
-            const filter = this.value.toLowerCase();
-            const rows = document.querySelectorAll('#historyTableBody tr');
-            rows.forEach(row => {
-                row.style.display = row.cells[0].textContent.toLowerCase().includes(filter) ? '' : 'none';
-            });
-        });
-
+        renderTable(stockData);
     } catch (err) {
         container.innerHTML = `<p class="text-center mt-3 text-danger">${err.message}</p>`;
     }
 }
 
-document.addEventListener('DOMContentLoaded', loadHistoryFromGitHub);
+// สร้างตารางและช่องค้นหา
+function renderTable(data) {
+    const container = document.getElementById('historyTableContainer');
+    let html = `
+      <div class="table-responsive">
+        <input type="text" id="searchInput" class="form-control mb-2" placeholder="ค้นหารหัสสินค้า">
+        <table class="table table-striped table-bordered">
+          <thead class="table-dark">
+            <tr>
+              <th>รหัสสินค้า</th>
+              <th>จำนวนลัง</th>
+              <th>จากตำแหน่ง</th>
+              <th>ไปตำแหน่ง</th>
+              <th>วันผลิต</th>
+              <th>วันหมดอายุ</th>
+              <th>เวลาบันทึก</th>
+            </tr>
+          </thead>
+          <tbody id="historyTableBody">
+    `;
+
+    data.forEach(item => {
+        html += `
+          <tr>
+            <td>${item.productCode}</td>
+            <td>${item.quantity}</td>
+            <td>${item.from}</td>
+            <td>${item.to}</td>
+            <td>${item.mfg}</td>
+            <td>${item.exp}</td>
+            <td>${new Date(item.timestamp).toLocaleString()}</td>
+          </tr>
+        `;
+    });
+
+    html += '</tbody></table></div>';
+    container.innerHTML = html;
+
+    // ฟิลเตอร์ค้นหารหัสสินค้า
+    document.getElementById('searchInput').addEventListener('input', function() {
+        const filter = this.value.toLowerCase();
+        const rows = document.querySelectorAll('#historyTableBody tr');
+        rows.forEach(row => {
+            row.style.display = row.cells[0].textContent.toLowerCase().includes(filter) ? '' : 'none';
+        });
+    });
+}
+
+// ล้างประวัติ (เก็บ GitHub ไว้ แต่ซ่อน)
+function clearHistory() {
+    if (confirm('คุณแน่ใจหรือไม่ที่จะล้างประวัติทั้งหมด?')) {
+        stockData = [];
+        renderTable(stockData);
+        alert('ล้างประวัติเรียบร้อยแล้ว');
+    }
+}
+
+// ส่งออก Excel/CSV (UTF-8)
+function exportExcel() {
+    if (stockData.length === 0) {
+        alert('ไม่มีข้อมูลให้ส่งออก');
+        return;
+    }
+
+    let csvContent = '\uFEFF'; // BOM สำหรับ Excel ภาษาไทย
+    csvContent += "รหัสสินค้า,จำนวนลัง,จากตำแหน่ง,ไปตำแหน่ง,วันผลิต,วันหมดอายุ,เวลาบันทึก\n";
+
+    stockData.forEach(item => {
+        const row = [
+            item.productCode,
+            item.quantity,
+            item.from,
+            item.to,
+            item.mfg,
+            item.exp,
+            new Date(item.timestamp).toLocaleString()
+        ].join(",");
+        csvContent += row + "\n";
+    });
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "stock_history.csv";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+document.addEventListener('DOMContentLoaded', loadHistory);
+</script>
+</body>
+</html>
